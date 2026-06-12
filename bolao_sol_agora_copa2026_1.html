@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolão Sol Agora · Copa 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0a0a14;
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px 16px;
+  }
+  .card {
+    background:#12121f;
+    border-radius:20px;
+    max-width:480px; width:100%;
+    overflow:hidden;
+    border:1px solid #1e1e35;
+    box-shadow:0 0 60px rgba(61,53,216,0.25);
+  }
+  .header {
+    background:linear-gradient(135deg,#3d35d8 0%,#2F089A 60%,#1a0560 100%);
+    padding:36px 32px 28px;
+    position:relative; overflow:hidden;
+  }
+  .header::before {
+    content:'⚽';
+    position:absolute; font-size:140px;
+    right:-20px; top:-20px;
+    opacity:0.07; line-height:1;
+  }
+  .header::after {
+    content:'';
+    position:absolute; bottom:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,#FFD966,transparent);
+  }
+  .tag {
+    display:inline-block;
+    background:rgba(245,197,24,0.15); color:#FFD966;
+    font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase;
+    padding:4px 10px; border-radius:4px;
+    border:1px solid rgba(245,197,24,0.3);
+    margin-bottom:16px;
+  }
+  .title { font-family:'Syne',sans-serif; font-size:34px; font-weight:800; color:#fff; line-height:1.1; margin-bottom:6px; }
+  .title span { color:#FFD966; }
+  .subtitle { font-size:13px; color:rgba(255,255,255,0.55); margin-bottom:24px; line-height:1.5; }
+  .price-badge {
+    display:inline-flex; align-items:baseline; gap:4px;
+    background:#FFD966; color:#0a0a14;
+    padding:10px 18px; border-radius:10px;
+    font-family:'Syne',sans-serif; font-weight:800;
+  }
+  .price-badge .currency { font-size:14px; }
+  .price-badge .amount { font-size:28px; line-height:1; }
+  .price-badge .label { font-size:12px; font-weight:600; color:rgba(0,0,0,0.6); margin-left:4px; }
+
+  .body { padding:28px 32px; }
+  .section-label {
+    font-size:10px; letter-spacing:1.8px; text-transform:uppercase;
+    color:rgba(255,255,255,0.3); font-weight:600; margin-bottom:14px;
+  }
+  .prizes { display:flex; flex-direction:column; gap:10px; margin-bottom:22px; }
+  .prize-row {
+    display:flex; align-items:center; gap:14px;
+    background:#1a1a2e; border-radius:12px; padding:14px 16px;
+    border:1px solid #1e1e35;
+  }
+  .prize-medal { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .medal-1 { background:rgba(255,215,0,0.15); }
+  .medal-2 { background:rgba(192,192,192,0.12); }
+  .medal-3 { background:rgba(205,127,50,0.12); }
+  .prize-info { flex:1; }
+  .prize-place { font-size:12px; color:rgba(255,255,255,0.45); font-weight:500; margin-bottom:2px; }
+  .prize-value { font-family:'Syne',sans-serif; font-weight:700; font-size:18px; color:#fff; }
+  .prize-pct { font-size:11px; color:rgba(255,255,255,0.35); text-align:right; }
+
+  .scoring { display:flex; flex-direction:column; gap:8px; margin-bottom:22px; }
+  .score-row {
+    display:flex; align-items:center; gap:12px;
+    background:#1a1a2e; border-radius:12px; padding:12px 16px;
+    border:1px solid #1e1e35;
+  }
+  .score-row.highlight { border-color:rgba(255,217,102,0.3); background:rgba(255,217,102,0.05); }
+  .score-row.bonus { border-color:rgba(61,53,216,0.3); background:rgba(61,53,216,0.05); }
+  .score-icon { font-size:18px; flex-shrink:0; width:28px; text-align:center; }
+  .score-info { flex:1; }
+  .score-title { font-size:13px; font-weight:600; color:rgba(255,255,255,0.85); margin-bottom:2px; }
+  .score-desc { font-size:11px; color:rgba(255,255,255,0.35); line-height:1.4; }
+  .score-pts { font-family:'Syne',sans-serif; font-weight:800; font-size:16px; color:#FFD966; white-space:nowrap; }
+  .bonus-pts { color:#7c6fe0; }
+
+  .simulator {
+    background:#0f0f1c; border:1px solid #1e1e35; border-radius:12px;
+    padding:16px 18px; margin-bottom:28px;
+  }
+  .simulator-label { font-size:11px; color:rgba(255,255,255,0.3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+  .simulator-row { display:flex; align-items:center; gap:10px; }
+  .simulator-row span { font-size:13px; color:rgba(255,255,255,0.5); }
+  .simulator-row input {
+    width:64px; background:#1a1a2e; border:1px solid #2a2a45; border-radius:6px;
+    color:#fff; padding:6px 8px; font-size:14px; font-family:inherit; outline:none; text-align:center;
+  }
+  #pot-label { font-size:12px; color:rgba(255,255,255,0.3); }
+
+  .steps { display:flex; flex-direction:column; gap:8px; margin-bottom:28px; }
+  .step { display:flex; align-items:flex-start; gap:12px; }
+  .step-num {
+    width:22px; height:22px; border-radius:50%; background:#3d35d8; color:#fff;
+    font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; margin-top:1px;
+  }
+  .step-text { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.5; }
+  .step-text strong { color:rgba(255,255,255,0.9); font-weight:600; }
+
+  .cta-block {
+    background:linear-gradient(135deg,rgba(61,53,216,0.2),rgba(47,8,154,0.1));
+    border:1px solid rgba(61,53,216,0.4); border-radius:14px;
+    padding:20px; text-align:center; margin-bottom:24px;
+  }
+  .cta-block p { font-size:13px; color:rgba(255,255,255,0.55); margin-bottom:4px; }
+  .cta-url {
+    font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:#FFD966;
+    word-break:break-all; display:block; margin-bottom:16px; text-decoration:none;
+  }
+  .cta-btn {
+    display:inline-block; background:#3d35d8; color:#fff;
+    padding:12px 28px; border-radius:10px;
+    font-family:'Syne',sans-serif; font-weight:700; font-size:14px;
+    text-decoration:none; cursor:pointer; border:none;
+  }
+  .footer {
+    padding:0 32px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .footer-brand { font-family:'Syne',sans-serif; font-size:13px; font-weight:800; color:rgba(255,255,255,0.2); }
+  .footer-brand span { color:#FFD966; opacity:0.7; }
+  .footer-note { font-size:11px; color:rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="tag">Sol Agora · Copa 2026</div>
+    <div class="title">Bolão<br><span>Sol Agora</span></div>
+    <div class="subtitle">Quem entende mais de futebol aqui dentro?<br>Chegou a hora de provar.</div>
+    <div class="price-badge">
+      <span class="currency">R$</span>
+      <span class="amount">60</span>
+      <span class="label">por participante</span>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="section-label">Premiação — divisão do prêmio</div>
+    <div class="prizes">
+      <div class="prize-row">
+        <div class="prize-medal medal-1">🥇</div>
+        <div class="prize-info">
+          <div class="prize-place">1º lugar</div>
+          <div class="prize-value" id="v1">—</div>
+        </div>
+        <div class="prize-pct">50%</div>
+      </div>
+      <div class="prize-row">
+        <div class="prize-medal medal-2">🥈</div>
+        <div class="prize-info">
+          <div class="prize-place">2º lugar</div>
+          <div class="prize-value" id="v2">—</div>
+        </div>
+        <div class="prize-pct">30%</div>
+      </div>
+      <div class="prize-row">
+        <div class="prize-medal medal-3">🥉</div>
+        <div class="prize-info">
+          <div class="prize-place">3º lugar</div>
+          <div class="prize-value" id="v3">—</div>
+        </div>
+        <div class="prize-pct">20%</div>
+      </div>
+    </div>
+
+    <div class="section-label">Sistema de pontuação</div>
+    <div class="scoring">
+      <div class="score-row highlight">
+        <div class="score-icon">🎯</div>
+        <div class="score-info">
+          <div class="score-title">Placar exato</div>
+          <div class="score-desc">Acertou o placar completo</div>
+        </div>
+        <div class="score-pts">35 pts</div>
+      </div>
+      <div class="score-row">
+        <div class="score-icon">✅</div>
+        <div class="score-info">
+          <div class="score-title">Vencedor + saldo de gols</div>
+          <div class="score-desc">Acertou quem ganhou (ou empate) e a diferença</div>
+        </div>
+        <div class="score-pts">6 pts</div>
+      </div>
+      <div class="score-row">
+        <div class="score-icon">⚽</div>
+        <div class="score-info">
+          <div class="score-title">Apenas o vencedor</div>
+          <div class="score-desc">Acertou quem ganhou, mas não o saldo</div>
+        </div>
+        <div class="score-pts">4 pts</div>
+      </div>
+      <div class="score-row bonus">
+        <div class="score-icon">➕</div>
+        <div class="score-info">
+          <div class="score-title">Bônus por time</div>
+          <div class="score-desc">+1 pt por cada time com gols acertados (acumulável)</div>
+        </div>
+        <div class="score-pts bonus-pts">+1 pt</div>
+      </div>
+    </div>
+
+    <div class="simulator">
+      <div class="simulator-label">Simulador de prêmio</div>
+      <div class="simulator-row">
+        <span>Participantes:</span>
+        <input id="num" type="number" min="3" max="100" value="10" oninput="calc()">
+        <span id="pot-label">→ R$ 600 no total</span>
+      </div>
+    </div>
+
+    <div class="section-label">Como participar</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Acesse o link</strong> abaixo e faça login no Palpiteia</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Registre seus palpites</strong> nos jogos antes de cada partida</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Transfira R$ 60</strong> para confirmar sua vaga — combinamos via WhatsApp</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Acompanhe o ranking</strong> e torça (ou sofra) em tempo real 😅</div>
+      </div>
+    </div>
+
+    <div class="cta-block">
+      <p>Link do bolão</p>
+      <a class="cta-url" href="https://palpiteia.com.br/boloes/cmqaveu8a00ft8u01ka0d0lpj/jogos" target="_blank">
+        palpiteia.com.br/boloes/cmqaveu8a…
+      </a>
+      <button class="cta-btn" onclick="copy()">Copiar link</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-brand">Sol<span>Agora</span></div>
+    <div class="footer-note">Boa sorte a todos ⚽</div>
+  </div>
+</div>
+
+<script>
+  function calc() {
+    const n = parseInt(document.getElementById('num').value) || 10;
+    const total = n * 60;
+    const fmt = v => 'R$ ' + v.toLocaleString('pt-BR');
+    document.getElementById('v1').textContent = fmt(total * 0.50);
+    document.getElementById('v2').textContent = fmt(total * 0.30);
+    document.getElementById('v3').textContent = fmt(total * 0.20);
+    document.getElementById('pot-label').textContent = '→ ' + fmt(total) + ' no total';
+  }
+  calc();
+
+  function copy() {
+    navigator.clipboard.writeText('https://palpiteia.com.br/boloes/cmqaveu8a00ft8u01ka0d0lpj/jogos').then(() => {
+      const btn = document.querySelector('.cta-btn');
+      btn.textContent = 'Link copiado! ✓';
+      btn.style.background = '#16a34a';
+      setTimeout(() => { btn.textContent = 'Copiar link'; btn.style.background = '#3d35d8'; }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
